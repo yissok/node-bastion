@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require('axios');
 const connectDB = require("./db");
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -26,6 +27,27 @@ app.get("/logout", (req, res) => {
 app.get("/admin", adminAuth, (req, res) => res.render("admin"));
 app.get("/basic", userAuth, (req, res) => res.render("user"));
 
+app.get('/proxy', async (req, res) => {
+  try {
+    const { url, body, method } = req.body;
+
+    if (!url || !method) {
+      return res.status(400).json({ error: 'url and method are required' });
+    }
+
+    const response = await axios.post(url, JSON.parse(body))
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error(error);
+    if (error.response) {
+      res.status(error.response.status).json(error.response.data);
+    } else {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+});
+
 const server = app.listen(PORT, () =>
   console.log(`Server Connected to port ${PORT}`)
 );
@@ -34,3 +56,4 @@ process.on("unhandledRejection", (err) => {
   console.log(`An error occurred: ${err.message}`);
   server.close(() => process.exit(1));
 });
+
