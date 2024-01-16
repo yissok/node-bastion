@@ -38,7 +38,7 @@ app.get('/proxy', async (req, res) => {
       return res.status(400).json({ error: 'url and method are required' });
     }
 
-    const response = await axios.post(url, JSON.parse(body))
+    const response = await axios.get(url)
 
     res.status(response.status).json(response.data);
   } catch (error) {
