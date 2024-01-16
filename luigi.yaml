@@ -18,14 +18,7 @@ Resources:
           |
           #!/bin/bash 
           set -e
-          curl -sL https://deb.nodesource.com/setup_16.x | bash -
-          sudo apt install nodejs
-          node -v
-          npm -v
-          sudo apt update
-          sudo -i -u ubuntu bash << EOF
-          set -e
-          cd /home/ubuntu
+          sudo yum install nodejs
           git clone https://github.com/yissok/node-bastion.git
           cd node-bastion
           npm install 
@@ -48,4 +41,8 @@ Resources:
       - IpProtocol: tcp
         FromPort: '8000'
         ToPort: '8000'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
         CidrIp: 0.0.0.0/0
