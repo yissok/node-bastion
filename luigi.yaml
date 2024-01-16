@@ -1,0 +1,52 @@
+#ami-0730971bf8e0532d6
+#amd ami-0005e0cfe09cc9050
+Parameters:
+  SSHKey:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: name of the key pair to ssh into the instance
+Resources:
+  NodeBastion:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0005e0cfe09cc9050
+      KeyName: !Ref SSHKey
+      SecurityGroups:
+        - !Ref NodeBastionSG
+      UserData: 
+        Fn::Base64:
+          |
+          #!/bin/bash 
+          set -e
+          curl -sL https://deb.nodesource.com/setup_16.x | bash -
+          sudo apt install nodejs
+          node -v
+          npm -v
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          sudo apt update
+          sudo -i -u ubuntu bash << EOF
+          set -e
+          cd /home/ubuntu
+          git clone https://github.com/yissok/node-bastion.git
+          cd node-bastion
+          npm install 
+          npm start
+          EOF
+            
+  NodeBastionSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: for the app nodes that allow ssh, http 
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '5000'
+        ToPort: '5000'
+        CidrIp: 0.0.0.0/0

@@ -27,6 +27,9 @@ app.get("/logout", (req, res) => {
 app.get("/admin", adminAuth, (req, res) => res.render("admin"));
 app.get("/basic", userAuth, (req, res) => res.render("user"));
 
+app.get('/yo', async (req, res) => {
+  res.status(200).json("yello");
+});
 app.get('/proxy', async (req, res) => {
   try {
     const { url, body, method } = req.body;
