@@ -8,8 +8,8 @@ Resources:
   NodeBastion:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
-      ImageId: ami-0005e0cfe09cc9050
+      InstanceType: t4g.nano
+      ImageId: ami-0730971bf8e0532d6
       KeyName: !Ref SSHKey
       SecurityGroups:
         - !Ref NodeBastionSG
@@ -22,7 +22,6 @@ Resources:
           sudo apt install nodejs
           node -v
           npm -v
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
           sudo apt update
           sudo -i -u ubuntu bash << EOF
           set -e
@@ -47,6 +46,6 @@ Resources:
         ToPort: '22'
         CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
-        FromPort: '5000'
-        ToPort: '5000'
+        FromPort: '8000'
+        ToPort: '8000'
         CidrIp: 0.0.0.0/0
