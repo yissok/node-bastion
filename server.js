@@ -1,15 +1,15 @@
 const express = require("express");
 const axios = require('axios');
-// const connectDB = require("./db");
+const connectDB = require("./db");
 const app = express();
 const cookieParser = require("cookie-parser");
 const { adminAuth, userAuth } = require("./middleware/auth.js");
 
-const PORT = 8000;
+const PORT = 5123;
 
 app.set("view engine", "ejs");
 
-// connectDB();
+connectDB();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use("/api/auth", require("./Auth/route"));
 
 app.get("/", (req, res) => res.render("home"));
-app.get("/register", (req, res) => res.render("register"));
+app.get("/register", (req, res) => res.render("registerUsername"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/logout", (req, res) => {
   res.cookie("jwt", "", { maxAge: "1" });
