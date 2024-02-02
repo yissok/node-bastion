@@ -11,3 +11,9 @@ kill -9 <process num>
 ```
 
 `npm start`
+
+TODO:
+- email instead of username
+- provide env variables via command line
+  - gh actions secrets
+- check user does not exist already
