@@ -4,12 +4,18 @@ const connectDB = require("./db");
 const app = express();
 const cookieParser = require("cookie-parser");
 const { adminAuth, userAuth } = require("./middleware/auth.js");
+const { exec } = require('child_process');
+
 
 const PORT = 5123;
 
 app.set("view engine", "ejs");
 
 connectDB();
+
+command = `open -a "Brave Browser" http://localhost:5123/register`;
+exec(command);
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,6 +25,8 @@ app.use("/api/auth", require("./Auth/route"));
 
 app.get("/", (req, res) => res.render("home"));
 app.get("/register", (req, res) => res.render("registerUsername"));
+app.get("/checkEmail", (req, res) => res.render("checkEmail"));
+app.get("/registerPass", (req, res) => res.render("registerPassword"));
 app.get("/login", (req, res) => res.render("login"));
 app.get("/logout", (req, res) => {
   res.cookie("jwt", "", { maxAge: "1" });

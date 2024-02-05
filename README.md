@@ -17,3 +17,4 @@ TODO:
 - provide env variables via command line
   - gh actions secrets
 - check user does not exist already
+- ts config mongodb Option 'importsNotUsedAsValues' is deprecated and will stop functioning in TypeScript 5.5. Specify compilerOption '"ignoreDeprecations": "5.0"' to silence this error.Use 'verbatimModuleSyntax' instead.ts

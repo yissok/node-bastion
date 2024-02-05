@@ -50,13 +50,14 @@ const createTransporter = async () => {
   }
 };
 
-const sendMail = async (token) => {
+const sendMail = async (token, recipient) => {
   try {
+    let body = "<p>expires in 5 minutes: "+"<a href=\"http://localhost:5123/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
     const mailOptions = {
       from: process.env.USER_EMAIL,
-      to: "andrea.media.info@gmail.com",
+      to: recipient,
       subject: "Test",
-      text: "expires in 5 minutes: "+token,
+      html: body,
     }
 
     let emailTransporter = await createTransporter();
@@ -67,6 +68,10 @@ const sendMail = async (token) => {
 };
 
 
+exports.renderEjsWithToken = async (req, res, next) => {
+  const user = req.query.user;
+  res.render('registerPassword', { user });
+};
 
 exports.register = async (req, res, next) => {
   const { username } = req.body;
@@ -78,7 +83,7 @@ exports.register = async (req, res, next) => {
       { expiresIn: maxAge }
   );
 
-  await sendMail(token)//remove whole then part, we want the token to only be available through email because that's the way we can guarantee that one user cannot create infinite accounts
+  await sendMail(token,username)//remove whole then part, we want the token to only be available through email because that's the way we can guarantee that one user cannot create infinite accounts
       .then(() => {
     res.status(201).json({
       message: token,
@@ -101,13 +106,12 @@ exports.registerPass = async (req, res, next) => {
     } else {
       console.log("valid token")
       console.log("decodedToken: "+decodedToken.username)
-      return res.status(200).json({ message: "Valid token" });
-      // registerUser(password, username)
+      registerUser(password, decodedToken.username, res)
     }
   });
 };
 
-function registerUser(password, username) {
+function registerUser(password, username, res) {
 
   if (password.length < 6) {
     return res.status(400).json({ message: "Password less than 6 characters" });
