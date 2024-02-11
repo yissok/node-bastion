@@ -42,7 +42,7 @@ const sendMail = async (token, recipient) => {
     // await emailTransporter.sendMail(mailOptions);
 
     await emailTransporter.sendMail({
-      from: 'your-email@gmail.com',
+      from: process.env.USER_EMAIL,
       to: recipient,
       subject: 'test',
       text: '',
