@@ -1,12 +1,13 @@
+require("dotenv").config()
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr(process.env.PASS_SECRET_KEY);
 const jwt = require("jsonwebtoken");
 
 
-const jwtSecret =
-  "4715aed3c946f7b0a38e6b534a9583628d84e96d10fbc04700770d572af3dce43625dd";
+const jwtSecret = process.env.JWS_SECRET;
 
-require("dotenv").config()
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
@@ -74,11 +75,12 @@ exports.renderEjsWithToken = async (req, res, next) => {
 };
 
 exports.register = async (req, res, next) => {
-  const { username } = req.body;
+  const { username, password } = req.body;
+  const encryptedPassword = cryptr.encrypt(password);
 
   const maxAge = 5 * 60;
   const token = jwt.sign(
-      { username },
+      { username, encryptedPassword },
       jwtSecret,
       { expiresIn: maxAge }
   );
@@ -97,16 +99,19 @@ exports.register = async (req, res, next) => {
 
 
 exports.registerPass = async (req, res, next) => {
-  const { token, password } = req.body;
+  const { token } = req.body;
   jwt.verify(token, jwtSecret, (err, decodedToken) => {
 
     if (err) {
       console.log("err: "+err)
       return res.status(401).json({ message: "Not authorized" });
     } else {
+      const pw = cryptr.decrypt(decodedToken.encryptedPassword);
       console.log("valid token")
       console.log("decodedToken: "+decodedToken.username)
-      registerUser(password, decodedToken.username, res)
+      console.log("decodedTokenpw: "+decodedToken.encryptedPassword)
+      console.log("decodedTokenpwdec: "+pw)
+      registerUser(pw, decodedToken.username, res)
     }
   });
 };
@@ -123,36 +128,25 @@ function registerUser(password, username, res) {
     })
         .then((user) => {
           const maxAge = 3 * 60 * 60;
-          const token = jwt.sign(
-              { id: user._id, username, role: user.role },
-              jwtSecret,
-              {
-                expiresIn: maxAge, // 3hrs
-              }
-          );
-          res.cookie("jwt", token, {
-            httpOnly: true,
-            maxAge: maxAge * 1000,
-          });
+          const role = userIn(user, process.env.USER_EMAIL, process.env.ANDREA_ADMIN) ? "admin" : "Basic";
           res.status(201).json({
             message: "User successfully created",
             user: user._id,
-            role: user.role,
+            role: role,
           });
         })
         .catch((error) =>
             res.status(400).json({
-              message: "User not successful created",
+              message: "User not created",
               error: error.message,
             })
         );
   });
 }
 
-exports.registerORI = async (req, res, next) => {
-  const { username, password } = req.body;
-  registerUser()
-};
+function userIn(user, ...emails) {
+  return emails.includes(user);
+}
 
 exports.login = async (req, res, next) => {
   const { username, password } = req.body;
