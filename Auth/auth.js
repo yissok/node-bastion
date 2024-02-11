@@ -9,40 +9,17 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWS_SECRET;
 
 const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
+// const { google } = require("googleapis");
+// const OAuth2 = google.auth.OAuth2;
 
 const createTransporter = async () => {
   try {
-    const oauth2Client = new OAuth2(
-        process.env.CLIENT_ID,
-        process.env.CLIENT_SECRET,
-        "https://developers.google.com/oauthplayground"
-    );
-
-    oauth2Client.setCredentials({
-      refresh_token: process.env.REFRESH_TOKEN,
-    });
-
-    const accessToken = await new Promise((resolve, reject) => {
-      oauth2Client.getAccessToken((err, token) => {
-        if (err) {
-          console.log("*ERR: ", err)
-          reject();
-        }
-        resolve(token);
-      });
-    });
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        type: "OAuth2",
         user: process.env.USER_EMAIL,
-        accessToken,
-        clientId: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        refreshToken: process.env.REFRESH_TOKEN,
+        pass: process.env.APP_PASSWORD
       },
     });
     return transporter;
@@ -54,15 +31,23 @@ const createTransporter = async () => {
 const sendMail = async (token, recipient) => {
   try {
     let body = "<p>expires in 5 minutes: "+"<a href=\"http://localhost:5123/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
-    const mailOptions = {
-      from: process.env.USER_EMAIL,
-      to: recipient,
-      subject: "Test",
-      html: body,
-    }
+    // const mailOptions = {
+    //   from: process.env.USER_EMAIL,
+    //   to: recipient,
+    //   subject: "Test",
+    //   html: body,
+    // }
 
     let emailTransporter = await createTransporter();
-    await emailTransporter.sendMail(mailOptions);
+    // await emailTransporter.sendMail(mailOptions);
+
+    await emailTransporter.sendMail({
+      from: 'your-email@gmail.com',
+      to: recipient,
+      subject: 'test',
+      text: '',
+      html: body,
+    });
   } catch (err) {
     console.log("ERROR: ", err)
   }
