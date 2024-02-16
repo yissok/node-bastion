@@ -2,15 +2,10 @@ require("dotenv").config()
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const Cryptr = require('cryptr');
-const cryptr = new Cryptr(process.env.PASS_SECRET_KEY);
+const cryptr = new Cryptr(process.env.FRONTEND_ENCRYPTION_KEY);
 const jwt = require("jsonwebtoken");
-
-
-const jwtSecret = process.env.JWS_SECRET;
-
+const jwtSecret = process.env.FRONTEND_JWS_SECRET;
 const nodemailer = require("nodemailer");
-// const { google } = require("googleapis");
-// const OAuth2 = google.auth.OAuth2;
 
 const createTransporter = async () => {
   try {
@@ -18,8 +13,8 @@ const createTransporter = async () => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.APP_PASSWORD
+        user: process.env.FRONTEND_ADMIN_SENDER_EMAIL,
+        pass: process.env.FRONTEND_APP_PASSWORD
       },
     });
     return transporter;
@@ -31,18 +26,9 @@ const createTransporter = async () => {
 const sendMail = async (token, recipient) => {
   try {
     let body = "<p>expires in 5 minutes: "+"<a href=\"http://localhost:5123/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
-    // const mailOptions = {
-    //   from: process.env.USER_EMAIL,
-    //   to: recipient,
-    //   subject: "Test",
-    //   html: body,
-    // }
-
     let emailTransporter = await createTransporter();
-    // await emailTransporter.sendMail(mailOptions);
-
     await emailTransporter.sendMail({
-      from: process.env.USER_EMAIL,
+      from: process.env.FRONTEND_ADMIN_SENDER_EMAIL,
       to: recipient,
       subject: 'test',
       text: '',
@@ -113,7 +99,7 @@ function registerUser(password, username, res) {
     })
         .then((user) => {
           const maxAge = 3 * 60 * 60;
-          const role = userIn(user, process.env.USER_EMAIL, process.env.ANDREA_ADMIN) ? "admin" : "Basic";
+          const role = userIn(user, process.env.FRONTEND_ADMIN_SENDER_EMAIL, process.env.FRONTEND_ANDREA_ADMIN_EMAIL) ? "admin" : "Basic";
           res.status(201).json({
             message: "User successfully created",
             user: user._id,
