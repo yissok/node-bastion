@@ -2,9 +2,9 @@ require("dotenv").config()
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const Cryptr = require('cryptr');
-const cryptr = new Cryptr(process.env.FRONTEND_ENCRYPTION_KEY);
+const cryptr = new Cryptr(process.env.FRONTENDENCRYPTIONKEY);
 const jwt = require("jsonwebtoken");
-const jwtSecret = process.env.FRONTEND_JWS_SECRET;
+const jwtSecret = process.env.FRONTENDJWSSECRET;
 const nodemailer = require("nodemailer");
 
 const createTransporter = async () => {
@@ -13,8 +13,8 @@ const createTransporter = async () => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.FRONTEND_ADMIN_SENDER_EMAIL,
-        pass: process.env.FRONTEND_APP_PASSWORD
+        user: process.env.FRONTENDADMINSENDEREMAIL,
+        pass: process.env.FRONTENDAPPPASSWORD
       },
     });
     return transporter;
@@ -28,7 +28,7 @@ const sendMail = async (token, recipient) => {
     let body = "<p>expires in 5 minutes: "+"<a href=\"http://localhost:5123/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
     let emailTransporter = await createTransporter();
     await emailTransporter.sendMail({
-      from: process.env.FRONTEND_ADMIN_SENDER_EMAIL,
+      from: process.env.FRONTENDADMINSENDEREMAIL,
       to: recipient,
       subject: 'test',
       text: '',
@@ -99,7 +99,7 @@ function registerUser(password, username, res) {
     })
         .then((user) => {
           const maxAge = 3 * 60 * 60;
-          const role = userIn(user, process.env.FRONTEND_ADMIN_SENDER_EMAIL, process.env.FRONTEND_ANDREA_ADMIN_EMAIL) ? "admin" : "Basic";
+          const role = userIn(user, process.env.FRONTENDADMINSENDEREMAIL, process.env.FRONTENDANDREAADMINEMAIL) ? "admin" : "Basic";
           res.status(201).json({
             message: "User successfully created",
             user: user._id,
