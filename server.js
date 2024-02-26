@@ -13,8 +13,8 @@ app.set("view engine", "ejs");
 
 connectDB();
 
-command = `open -a "Brave Browser" http://localhost:5123/register`;
-exec(command);
+// command = `open -a "Brave Browser" http://localhost:5123/register`;
+// exec(command);
 
 
 app.use(express.json());

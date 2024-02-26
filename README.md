@@ -13,6 +13,7 @@ kill -9 <process num>
 `npm start`
 
 TODO:
+- make it work with online mongo
 - host on aws through cloudformation
 - check user does not exist already
 - forgot password endpoint
