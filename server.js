@@ -10,10 +10,12 @@ var https = require('https');
 var fs = require('fs');
 var https_options = {
   key: fs.readFileSync("certs/yissok.online.key"),
-  cert: fs.readFileSync("certs/yissok_online.crt"),
-  ca: [
-  fs.readFileSync('certs/My_CA_Bundle.ca-bundle')
-  ] };
+  cert: fs.readFileSync("certs/yissok_online.crt")
+  // ,
+  // ca: [
+  // fs.readFileSync('certs/My_CA_Bundle.ca-bundle')
+  // ]
+ };
 const PORT = 443;
 
 app.set("view engine", "ejs");
