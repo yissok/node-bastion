@@ -6,8 +6,15 @@ const cookieParser = require("cookie-parser");
 const { adminAuth, userAuth } = require("./middleware/auth.js");
 const { exec } = require('child_process');
 
-
-const PORT = 5123;
+var https = require('https');
+var fs = require('fs');
+var https_options = {
+  key: fs.readFileSync("certs/yissok.online.key"),
+  cert: fs.readFileSync("certs/yissok_online.crt"),
+  ca: [
+  fs.readFileSync('certs/My_CA_Bundle.ca-bundle')
+  ] };
+const PORT = 443;
 
 app.set("view engine", "ejs");
 
@@ -59,8 +66,9 @@ app.get('/proxy', async (req, res) => {
   }
 });
 
-const server = app.listen(PORT, () =>
-  console.log(`Server Connected to port ${PORT}`)
+
+const server = https.createServer(https_options, app).listen(PORT, () =>
+console.log(`Server Connected to port ${PORT}`)
 );
 
 process.on("unhandledRejection", (err) => {
