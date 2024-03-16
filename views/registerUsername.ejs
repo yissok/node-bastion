@@ -2,46 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register Page</title>
 </head>
+<style>
+
+.error{
+  background-color: red;
+}
+
+body, html {
+    height: 100%;
+}
+
+.panel {
+     background-color: #cccccc;
+    border-radius: 10px;
+    
+}
+
+</style>
 <body>
-<h1>Register Page</h1>
-<form >
-  <div class="error" style="background-color: red;"></div><br>
-  <label for="username">Username</label><br>
-  <input type="text" id="username" required/><br>
-  <label for="password">password</label><br>
-  <input type="text" id="password" required/><br>
-  <input type="submit" value="register"><br>
-</form>
-<a href="/login">Already registered? Login</a>
+  
+  <div class="container-fluid h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6 panel text-center p-3">
+        <form > 
+          <div class="error"></div><br>
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="email" id="username" required>            
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control"  placeholder="password" id="password" required>
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary btn-block" value="register">
+          </div>
+        </form>
+        <a href="/login">Already registered? Login</a>
 
-<script>
-  const form = document.querySelector('form')
-  const username = document.querySelector('#username')
-  const password = document.querySelector('#password')
-  const display = document.querySelector('.error')
+      </div>
+    </div>
+  </div>
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    display.textContent = ''
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        body: JSON.stringify({ username: username.value, password: password.value }),
-        headers: { 'Content-Type': 'application/json' }
+
+
+
+
+
+  <script>
+    const form = document.querySelector('form')
+    const username = document.querySelector('#username')
+    const password = document.querySelector('#password')
+    const display = document.querySelector('.error')
+
+     form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        display.textContent = ''
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ username: username.value, z }),
+            headers: { 'Content-Type': 'application/json' }
+          })
+          const data = await res.json()
+          if(res.status === 400 || res.status === 401){
+           return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
+          }
+          data.role === "admin" ? location.assign('/admin') : location.assign('/basic')
+        } catch (err) {
+          console.log(err.message)
+        }
+
       })
-      const data = await res.json()
-      if(res.status === 400 || res.status === 401){
-        return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
-      }
-      location.assign('/checkEmail')
-    } catch (err) {
-      console.log(err.message)
-    }
-
-  })
-</script>
+  </script>
 </body>
 </html>
