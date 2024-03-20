@@ -79,7 +79,7 @@ body, html {
           if(res.status === 400 || res.status === 401){
            return display.textContent = `${data.message}. ${data.error ? data.error : ''}`
           }
-          data.role === "admin" ? location.assign('/admin') : location.assign('/basic')
+          data.role === "admin" ? location.assign('/admin') : location.assign('/checkEmail')
         } catch (err) {
           console.log(err.message)
         }

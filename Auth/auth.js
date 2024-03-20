@@ -25,7 +25,7 @@ const createTransporter = async () => {
 
 const sendMail = async (token, recipient) => {
   try {
-    let body = "<p>expires in 5 minutes: "+"<a href=\"http://localhost:5123/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
+    let body = "<p>expires in 5 minutes: "+"<a href=\"https://yissok.online/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
     let emailTransporter = await createTransporter();
     await emailTransporter.sendMail({
       from: process.env.FRONTEND_ADMIN_SENDER_EMAIL,
