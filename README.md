@@ -10,6 +10,15 @@ ps -ef | grep mongod
 kill -9 <process num>
 ```
 
+add this to hosts file 
+`127.0.0.1	yissok.online`
+
+
+npm start
+npm start
+npm start
+npm start
+
 `npm start`
 
 TODO:

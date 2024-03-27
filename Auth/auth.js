@@ -226,20 +226,51 @@ exports.deleteUser = async (req, res, next) => {
     );
 };
 
-exports.getUsers = async (req, res, next) => {
-  await User.find({})
-    .then((users) => {
-      const userFunction = users.map((user) => {
-        const container = {};
-        container.username = user.username;
-        container.role = user.role;
-        container.id = user._id;
+exports.getSingleUser = async (req, res, next) => {
+  const token = req.cookies.jwt;
 
-        return container;
-      });
-      res.status(200).json({ user: userFunction });
-    })
-    .catch((err) =>
-      res.status(401).json({ message: "Not successful", error: err.message })
-    );
+  jwt.verify(token, jwtSecret, (err, decodedToken) => {
+
+    if (err) {
+      console.log("err: "+err)
+      return res.status(401).json({ message: "Not authorized" });
+    } else {
+      console.log("id: "+decodedToken.id)
+      console.log("username: "+decodedToken.username)
+      console.log("role: "+decodedToken.role)
+      const timeLeft = (decodedToken.exp - Math.floor(Date.now()/1000))
+      console.log("time left: " + timeLeft);
+      User.findById(decodedToken.id)
+        .then((user) =>
+          res.status(200).json({ message: "User found", user, timeLeft })
+        )
+        .catch((error) =>
+          res
+            .status(400)
+            .json({ message: "An error occurred", error: error.message })
+        );
+    }
+  });
+};
+
+exports.getUsers = async (req, res, next) => {
+  if (role && id) {
+    if (role === "admin") {
+      await User.find({})
+        .then((users) => {
+          const userFunction = users.map((user) => {
+            const container = {};
+            container.username = user.username;
+            container.role = user.role;
+            container.id = user._id;
+    
+            return container;
+          });
+          res.status(200).json({ user: userFunction });
+        })
+        .catch((err) =>
+          res.status(401).json({ message: "Not successful", error: err.message })
+        );
+    }
+  }
 };

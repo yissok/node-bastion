@@ -7,25 +7,30 @@
   <title>User page</title>
 </head>
 <body>
-  <h1>Users</h1>
+  <h1 id="usernameHeader">Users</h1>
   <ul></ul>
   <button class="logout"> <a href="/logout">Log Out</a></button>
   <script>
     const ul = document.querySelector('ul')
 
-    const getUsers = async() => {
-      const res = await fetch('/api/auth/getUsers')
-      const data = await res.json()
-      data.user.map((mappedUser)=> {
-        if (mappedUser.username !== 'admin') {
-          let li = `<li> <b>Username</b> => ${mappedUser.username} <br> <b>Role</b> => ${mappedUser.role} </li>`
-          ul.innerHTML += li
-        } else {
-          return null
-        }
-      })
+    const getSingleUser = async() => {
+      const res = await fetch('/api/auth/getSingleUser')
+      const user = await res.json()
+      console.log(user)
+
+      var h1Element = document.getElementById("usernameHeader");
+      h1Element.innerHTML = user.user.username;
+
+      let li = `
+        <li>
+          <b>Role</b> => ${user.user.role}
+        </li>
+        <li>
+          <b>Time left in session</b> => ${user.timeLeft}
+        </li>`
+      ul.innerHTML += li
     }
-    getUsers()
+    getSingleUser()
   </script>
 </body>
 </html>
