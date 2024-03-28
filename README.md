@@ -22,11 +22,15 @@ npm start
 `npm start`
 
 TODO:
-- make it work with online mongo
-- host on aws through cloudformation
+- extract configuration out of code and into config files
 - check user does not exist already
 - forgot password endpoint
 - make ejs pages prettier
 - start ios app
   - play with app store receipt verification endpoint
   - pricing comes in when the user needs to do more than a certain number of requests
+
+
+TODO grave:
+- make it work with online mongo
+- host on aws through cloudformation

@@ -1,4 +1,8 @@
 require("dotenv").config()
+const config = require('config');
+const MAX_AGE_SESSION = config.get('MAX_AGE_SESSION');
+const MAX_AGE_REGISTRATION_LINK = config.get('MAX_AGE_REGISTRATION_LINK');
+
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const Cryptr = require('cryptr');
@@ -48,12 +52,10 @@ exports.renderEjsWithToken = async (req, res, next) => {
 exports.register = async (req, res, next) => {
   const { username, password } = req.body;
   const encryptedPassword = cryptr.encrypt(password);
-
-  const maxAge = 5 * 60;
   const token = jwt.sign(
       { username, encryptedPassword },
       jwtSecret,
-      { expiresIn: maxAge }
+      { expiresIn: MAX_AGE_REGISTRATION_LINK }
   );
 
   await sendMail(token,username)//remove whole then part, we want the token to only be available through email because that's the way we can guarantee that one user cannot create infinite accounts
@@ -98,7 +100,6 @@ function registerUser(password, username, res) {
       password: hash,
     })
         .then((user) => {
-          const maxAge = 3 * 60 * 60;
           const role = userIn(user, process.env.FRONTEND_ADMIN_SENDER_EMAIL, process.env.FRONTEND_ANDREA_ADMIN_EMAIL) ? "admin" : "Basic";
           res.status(201).json({
             message: "User successfully created",
@@ -141,17 +142,16 @@ exports.login = async (req, res, next) => {
       // comparing given password with hashed password
       bcrypt.compare(password, user.password).then(function (result) {
         if (result) {
-          const maxAge = 3 * 60 * 60;
           const token = jwt.sign(
             { id: user._id, username, role: user.role },
             jwtSecret,
             {
-              expiresIn: maxAge, // 3hrs in sec
+              expiresIn: MAX_AGE_SESSION, // 3hrs in sec
             }
           );
           res.cookie("jwt", token, {
             httpOnly: true,
-            maxAge: maxAge * 1000, // 3hrs in ms
+            maxAge: MAX_AGE_SESSION * 1000, // 3hrs in ms
           });
           res.status(201).json({
             message: "User successfully Logged in",
