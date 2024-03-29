@@ -1,19 +1,23 @@
+
+const config = require('config');
+const HOST = config.get('HOST');
+
 const express = require("express");
 const axios = require('axios');
-const connectDB = require("./db");
+const connectDB = require("./misc/db.js");
 const app = express();
 const cookieParser = require("cookie-parser");
-const { adminAuth, userAuth } = require("./middleware/auth.js");
+const { adminAuth, userAuth } = require("./service/authorisation.js");
 const { exec } = require('child_process');
 
 var https = require('https');
 var fs = require('fs');
 var https_options = {
-  key: fs.readFileSync("certs/yissok.online.key"),
-  cert: fs.readFileSync("certs/yissok_online.crt")
+  key: fs.readFileSync("misc/certs/yissok.online.key"),
+  cert: fs.readFileSync("misc/certs/yissok_online.crt")
   // ,
   // ca: [
-  // fs.readFileSync('certs/My_CA_Bundle.ca-bundle')
+  // fs.readFileSync('misc/certs/My_CA_Bundle.ca-bundle')
   // ]
  };
 const PORT = 443;
@@ -22,15 +26,18 @@ app.set("view engine", "ejs");
 
 connectDB();
 
-// command = `open -a "Brave Browser" http://localhost:5123/register`;
-// exec(command);
+if (process.platform === 'darwin') {
+  console.log(process.platform)
+  command = `open -a "Brave Browser" https://${HOST}/register`;
+  exec(command);  
+}
 
 
 app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", require("./Auth/route"));
+app.use("/api/auth", require("./routes/route.js"));
 
 app.get("/", (req, res) => res.render("home"));
 app.get("/register", (req, res) => res.render("registerUsername"));
@@ -41,13 +48,10 @@ app.get("/logout", (req, res) => {
   res.cookie("jwt", "", { maxAge: "1" });
   res.redirect("/");
 });
+
 app.get("/admin", adminAuth, (req, res) => res.render("admin"));
 app.get("/basic", userAuth, (req, res) => res.render("user"));
-
-app.get('/yo', async (req, res) => {
-  res.status(200).json("yello");
-});
-app.get('/proxy', async (req, res) => {
+app.get('/proxy', userAuth, async (req, res) => {
   try {
     const { url, body, method } = req.body;
 

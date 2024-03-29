@@ -1,7 +1,7 @@
 node_modules
 .DS_Store
 package-lock.json
-certs
+misc/certs
 
 # this file is for secrets only, should not be committed 
 .env

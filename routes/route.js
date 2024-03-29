@@ -10,8 +10,8 @@ const {
     deleteUser,
     getUsers,
     getSingleUser
-} = require("./auth");
-const { adminAuth } = require("../middleware/auth");
+} = require("../service/authentication");
+const { adminAuth } = require("../service/authorisation");
 
 router.route("/register").post(register);
 router.route("/registerPass").post(registerPass);

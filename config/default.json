@@ -1,5 +1,7 @@
 {
     "MAX_AGE_SESSION": 10800,
     "MAX_AGE_REGISTRATION_LINK": 3000,
-    "DATABASE_URL": "mongodb://localhost/my-db"
+    "HOST": "yissok.online",
+    "ADMIN_AUTHORIZATION_LABEL": "admin",
+    "BASIC_AUTHORIZATION_LABEL": "Basic"
 }

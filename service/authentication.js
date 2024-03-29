@@ -2,8 +2,9 @@ require("dotenv").config()
 const config = require('config');
 const MAX_AGE_SESSION = config.get('MAX_AGE_SESSION');
 const MAX_AGE_REGISTRATION_LINK = config.get('MAX_AGE_REGISTRATION_LINK');
+const HOST = config.get('HOST');
 
-const User = require("../model/User");
+const User = require("../model/user");
 const bcrypt = require("bcryptjs");
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr(process.env.FRONTEND_ENCRYPTION_KEY);
@@ -29,7 +30,7 @@ const createTransporter = async () => {
 
 const sendMail = async (token, recipient) => {
   try {
-    let body = "<p>expires in 5 minutes: "+"<a href=\"https://yissok.online/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
+    let body = "<p>expires in 5 minutes: "+"<a href=\"https://"+HOST+"/api/auth/renderEjsWithToken?user=" + token + "\">Click to complete registration</a></p>"
     let emailTransporter = await createTransporter();
     await emailTransporter.sendMail({
       from: process.env.FRONTEND_ADMIN_SENDER_EMAIL,

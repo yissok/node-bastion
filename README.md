@@ -22,7 +22,7 @@ npm start
 `npm start`
 
 TODO:
-- extract configuration out of code and into config files
+- split auth file up
 - check user does not exist already
 - forgot password endpoint
 - make ejs pages prettier
@@ -34,3 +34,4 @@ TODO:
 TODO grave:
 - make it work with online mongo
 - host on aws through cloudformation
+- extract configuration out of code and into config files
