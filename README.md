@@ -22,6 +22,11 @@ npm start
 `npm start`
 
 TODO:
+- move cloudformation out of backend
+- (not so high prio because only thing that will be sensitive to load is authentication once you start serving from the s3 bucket) keep api gateway for api but make ecs pod cloudformation alternative if you need to go live with something
+- s3 bucket serve website
+  - create new repo
+  - update bucket on push to main
 - split auth file up
 - check user does not exist already
 - forgot password endpoint
@@ -32,6 +37,7 @@ TODO:
 
 
 TODO grave:
+- password 6 char
 - make it work with online mongo
 - host on aws through cloudformation
 - extract configuration out of code and into config files

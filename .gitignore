@@ -2,6 +2,7 @@ node_modules
 .DS_Store
 package-lock.json
 misc/certs
+.vscode/
 
 # this file is for secrets only, should not be committed 
 .env
