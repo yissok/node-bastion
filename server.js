@@ -53,7 +53,8 @@ app.get("/admin", adminAuth, (req, res) => res.render("admin"));
 app.get("/basic", userAuth, (req, res) => res.render("user"));
 app.get('/proxy', userAuth, async (req, res) => {
   try {
-    const { url, body, method } = req.body;
+    // const { url, body, method } = req.body;
+    const { url, method } = req.body;
 
     if (!url || !method) {
       return res.status(400).json({ error: 'url and method are required' });

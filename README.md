@@ -22,10 +22,16 @@ npm start
 `npm start`
 
 TODO:
-- move cloudformation out of backend
-- (not so high prio because only thing that will be sensitive to load is authentication once you start serving from the s3 bucket) keep api gateway for api but make ecs pod cloudformation alternative if you need to go live with something
+- migrate both spring boot and nodejs to fargate to simplify
+  - dockerise backend api
+  - dockerise frontend api
+  - manually deploy backend
+  - manually deploy frontend
+  - cloudformation backend
+  - cloudformation frontend
+  - cleanup post script for ENI api gateway
 - s3 bucket serve website
-  - create new repo
+  - ~~create new repo~~
   - update bucket on push to main
 - split auth file up
 - check user does not exist already
