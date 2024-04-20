@@ -30,9 +30,15 @@ TODO:
   - cloudformation backend
   - cloudformation frontend
   - cleanup post script for ENI api gateway
+  
 - s3 bucket serve website
   - ~~create new repo~~
   - update bucket on push to main
+
+- per user rate limiting
+- split up into ui server stack, static ui stack, backend stack  
+- tool to generate guest username and password
+
 - split auth file up
 - check user does not exist already
 - forgot password endpoint
