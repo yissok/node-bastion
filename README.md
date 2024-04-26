@@ -21,6 +21,9 @@ npm start
 
 `npm start`
 
+docker build -t andrea-26-4-2024 .
+docker run -p 443: 443 andrea-26-4-2024
+
 TODO:
 - migrate both spring boot and nodejs to fargate to simplify
   - dockerise backend api
