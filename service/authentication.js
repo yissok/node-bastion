@@ -4,7 +4,7 @@ const MAX_AGE_SESSION = config.get('MAX_AGE_SESSION');
 const MAX_AGE_REGISTRATION_LINK = config.get('MAX_AGE_REGISTRATION_LINK');
 const HOST = config.get('HOST');
 
-const User = require("../model/user");
+const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr(process.env.FRONTEND_ENCRYPTION_KEY);
